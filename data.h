@@ -39,7 +39,7 @@ struct Task {
   friend std::istream& operator>>(std::istream& stream, Task& task) {
     uint64_t N;
     stream >> N;
-    for (uint64_t i = 0; i < 2 * N; ++i) {
+    for (uint64_t i = 0; i < N; ++i) {
       uint64_t M;
       Task::Client client;
 
