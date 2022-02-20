@@ -15,6 +15,17 @@ struct Solution {
     }
     return stream;
   }
+
+  friend std::istream& operator>>(std::istream& stream, Solution& solution) {
+    uint64_t N;
+    stream >> N;
+    for (uint64_t i = 0; i < N; ++i) {
+      std::string s;
+      stream >> s;
+      solution.ingredients.insert(std::move(s));
+    }
+    return stream;
+  }
 };
 
 struct Task {
