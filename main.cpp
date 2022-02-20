@@ -4,6 +4,7 @@
 
 #include "data.h"
 #include "scorer.h"
+#include "graph.h"
 
 int main() {
   const std::vector<std::string> files = {
@@ -26,6 +27,7 @@ int main() {
   bool read_output_from_files = false;
 
   for (size_t i = 0; i < files.size(); ++i) {
+    std::cout << "try solve file " << files[i] << std::endl;
     std::ifstream in(files[i]);
     Task task;
     in >> task;
@@ -34,12 +36,14 @@ int main() {
     if (read_output_from_files) {
       std::ifstream in2(output_files[i]);
       in2 >> solution;
+    } else {
+      solution = graph_solve(task);
     }
 
     std::cout << files[i] << ": " << Scorer::Score(task, solution) << "\n";
 
     if (!read_output_from_files) {
-      std::ofstream out(files[i].substr(0, files[i].size() - 3) + ".out");
+      std::ofstream out(output_files[i]);
       out << solution;
     }
   }

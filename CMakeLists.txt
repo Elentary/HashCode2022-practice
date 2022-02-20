@@ -7,6 +7,6 @@ add_subdirectory(or-tools)
 
 SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -O4 -DNDEBUG")
 
-add_executable(main main.cpp scorer.h data.h)
+add_executable(main main.cpp scorer.h data.h graph.h)
 add_executable(optimize optimization.cpp scorer.h data.h)
 target_link_libraries(optimize ortools::ortools)

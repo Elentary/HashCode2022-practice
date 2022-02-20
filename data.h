@@ -7,7 +7,7 @@
 #include <istream>
 
 struct Solution {
-  std::set<std::string> ingredients;
+  std::unordered_set<std::string> ingredients;
 
   friend std::ostream& operator<<(std::ostream& stream, const Solution& solution) {
     stream << solution.ingredients.size() << " ";
@@ -31,8 +31,8 @@ struct Solution {
 
 struct Task {
   struct Client {
-    std::set<std::string> likes;
-    std::set<std::string> dislikes;
+    std::unordered_set<std::string> likes;
+    std::unordered_set<std::string> dislikes;
   };
 
   std::vector<Client> clients;
