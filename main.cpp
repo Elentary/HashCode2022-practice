@@ -6,17 +6,24 @@
 
 
 int main() {
-  std::ifstream in("a_an_example.in");
-  Task task;
-  in >> task;
+  const std::vector<std::string> files = {
+   "a_an_example.in",
+   "b_basic.in",
+   "c_coarse.in",
+   "d_difficult.in",
+   "e_elaborate.in"
+  };
   
-  Solution solution;
-  solution.ingredients.insert("cheese");
-  solution.ingredients.insert("mushrooms");
-  solution.ingredients.insert("tomatoes");
-  solution.ingredients.insert("peppers");
-  
-  std::cout << solution << "\n";
-  std::cout << Scorer::Score(task, solution);
+  for (const auto& file : files) {
+    std::ifstream in(file);
+    Task task;
+    in >> task;
+
+    Solution solution;
+
+    std::ofstream out(file.substr(0, file.size() - 3) + ".out");
+    out << solution;
+    std::cout << file << ": " << Scorer::Score(task, solution) << "\n";
+  }
   return 0;
 }
