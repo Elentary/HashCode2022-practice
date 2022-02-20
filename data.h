@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <set>
+#include <unordered_set>
 #include <ostream>
 #include <istream>
 
@@ -30,8 +31,8 @@ struct Solution {
 
 struct Task {
   struct Client {
-    std::vector<std::string> likes;
-    std::vector<std::string> dislikes;
+    std::set<std::string> likes;
+    std::set<std::string> dislikes;
   };
 
   std::vector<Client> clients;
@@ -47,13 +48,13 @@ struct Task {
       for (uint64_t j = 0; j < M; ++j) {
         std::string ingredient;
         stream >> ingredient;
-        client.likes.push_back(std::move(ingredient));
+        client.likes.insert(std::move(ingredient));
       }
       stream >> M;
       for (uint64_t j = 0; j < M; ++j) {
         std::string ingredient;
         stream >> ingredient;
-        client.dislikes.push_back(std::move(ingredient));
+        client.dislikes.insert(std::move(ingredient));
       }
 
       task.clients.push_back(std::move(client));
