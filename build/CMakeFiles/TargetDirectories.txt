@@ -1,0 +1,3 @@
+/Users/aa/2022/HashCode2022-practice/build/CMakeFiles/main.dir
+/Users/aa/2022/HashCode2022-practice/build/CMakeFiles/edit_cache.dir
+/Users/aa/2022/HashCode2022-practice/build/CMakeFiles/rebuild_cache.dir

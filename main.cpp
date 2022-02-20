@@ -1,6 +1,6 @@
 #include <iostream>
 
 int main() {
-  std::cout << "PIDOR!\n";
+  std::cout << "DIMA PIDOR!\n";
   return 0;
 }
