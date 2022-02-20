@@ -15,11 +15,11 @@ int main() {
   };
 
   const std::vector<std::string> output_files = {
-      "a_an_example.in",
-      "b_basic.in",
-      "c_coarse.in",
-      "d_difficult.in",
-      "e_elaborate.in"
+      "a_an_example.out",
+      "b_basic.out",
+      "c_coarse.out",
+      "d_difficult.out",
+      "e_elaborate.out"
   };
   assert(files.size() == output_files.size());
 
