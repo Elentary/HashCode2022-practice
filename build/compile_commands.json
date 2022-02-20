@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/Users/aa/2022/HashCode2022-practice/build",
-  "command": "/usr/bin/clang++   -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.0.sdk -std=gnu++17 -o CMakeFiles/main.dir/main.cpp.o -c /Users/aa/2022/HashCode2022-practice/main.cpp",
-  "file": "/Users/aa/2022/HashCode2022-practice/main.cpp"
-}
-]
