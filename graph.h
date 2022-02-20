@@ -55,13 +55,41 @@ int random_from_vector(const vector<int> &v, mt19937 &r) {
     return v[i];
 }
 
+int get_degree(const edges &e, const unordered_set<int> &s, int v) {
+    int degree = 0;
+    for (int i : e[v]) {
+        if (s.find(i) == s.end()) {
+            ++degree;
+        }
+    }
+    return degree;
+}
+
+vector<int> top_degrees(const edges &e, const unordered_set<int> &s, const vector<int> &good) {
+    vector<int> res;
+    int top = 0;
+    for (int i : good) {
+        int degree = get_degree(e, s, i);
+        if (degree > top) {
+            top = degree;
+            res.clear();
+            res.push_back(i);
+        }
+    }
+    return res;
+}
+
 int get_vertex(const edges &e, const unordered_set<int> &s, mt19937 &r) {
     int n = e.size();
+    vector<int> degrees(n);
+    for (int i = 0; i < n; ++i) {
+        degrees[i] = get_degree(e, s, i);
+    }
     vector<int> good;
     vector<int> bad;
     for (int i = 0; i < n; ++i) {
         for (int j : e[i]) {
-            if (s.find(j) == s.end()) {
+            if (degrees[j] != 0 && s.find(j) == s.end()) {
                 if (s.find(i) != s.end()) {
                     good.push_back(i);
                 } else {
@@ -103,7 +131,7 @@ int dijkstra(const edges &e, const unordered_set<int> &s, int start, mt19937& r)
             }
         }
         // TODO: check connected components
-        // TODO: check degree
+        good = top_degrees(e, s, good); 
         return random_from_vector(good, r);
     }
     vector<int> good;
@@ -112,7 +140,7 @@ int dijkstra(const edges &e, const unordered_set<int> &s, int start, mt19937& r)
             good.push_back(i);
         }
     }
-    // TODO: check degree
+    good = top_degrees(e, s, good);
     return random_from_vector(good, r);
 }
 
@@ -155,6 +183,7 @@ Solution graph_solve(const Task &task) {
     }
     int iter = 0;
     while (!is_isolated(e, s)) {
+        cerr << "iter: " << ++iter << endl;
         int res = get_leaves(e, s);
         if (res > 0) {
             continue;
