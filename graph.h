@@ -55,7 +55,10 @@ int random_from_vector(const vector<int> &v, mt19937 &r) {
     return v[i];
 }
 
-int get_degree(const edges &e, const unordered_set<int> &s, int v) {
+inline int get_degree(const edges &e, const unordered_set<int> &s, int v) {
+    if (s.find(v) != s.end()) {
+        return 0;
+    }
     int degree = 0;
     for (int i : e[v]) {
         if (s.find(i) == s.end()) {
@@ -63,6 +66,15 @@ int get_degree(const edges &e, const unordered_set<int> &s, int v) {
         }
     }
     return degree;
+}
+
+vector<int> get_degrees(const edges &e, const unordered_set<int> &s) {
+    int n = e.size();
+    vector<int> degrees(n);
+    for (int i = 0; i < n; ++i) {
+        degrees[i] = get_degree(e, s, i);
+    }
+    return degrees;
 }
 
 vector<int> top_degrees(const edges &e, const unordered_set<int> &s, const vector<int> &good) {
@@ -74,6 +86,8 @@ vector<int> top_degrees(const edges &e, const unordered_set<int> &s, const vecto
             top = degree;
             res.clear();
             res.push_back(i);
+        } else if (degree == top) {
+            res.push_back(i);
         }
     }
     return res;
@@ -81,10 +95,7 @@ vector<int> top_degrees(const edges &e, const unordered_set<int> &s, const vecto
 
 int get_vertex(const edges &e, const unordered_set<int> &s, mt19937 &r) {
     int n = e.size();
-    vector<int> degrees(n);
-    for (int i = 0; i < n; ++i) {
-        degrees[i] = get_degree(e, s, i);
-    }
+    vector<int> degrees = get_degrees(e, s);
     vector<int> good;
     vector<int> bad;
     for (int i = 0; i < n; ++i) {
@@ -105,7 +116,51 @@ int get_vertex(const edges &e, const unordered_set<int> &s, mt19937 &r) {
     return random_from_vector(bad, r);
 }
 
-int dijkstra(const edges &e, const unordered_set<int> &s, int start, mt19937& r) {
+vector<int> top_components(const edges &e, unordered_set<int> &s, const vector<int> &good) {
+    int n = e.size();
+    vector<int> res;
+    int best = 1000000;
+    for (int i : good) {
+        s.insert(i);
+        vector<int> degrees = get_degrees(e, s);
+        int n_cmp = 0;
+        vector<int> comps(n, 0);
+        for (int j = 0; j < n; ++j) {
+            if (degrees[j] == 0) {
+                comps[j] = 1;
+            }
+        }
+        for (int j = 0; j < n; ++j) {
+            if (comps[j] == 0) {
+                queue<int> q;
+                q.push(j);
+                comps[j] = 1;
+                ++n_cmp;
+                while (!q.empty()) {
+                    int a = q.front();
+                    q.pop();
+                    for (int b : e[a]) {
+                        if (comps[b] == 0) {
+                            q.push(b);
+                            comps[b] = 1;
+                        }
+                    }
+                }
+            }
+        }
+        s.erase(i);
+        if (n_cmp < best) {
+            best = n_cmp;
+            res.clear();
+            res.push_back(i);
+        } else if (n_cmp == best) {
+            res.push_back(i);
+        }
+    }
+    return res;
+}
+
+int dijkstra(const edges &e, unordered_set<int> &s, int start, mt19937& r) {
     int n = e.size();
     int max_d = 0;
     vector<int> d(n, -1);
@@ -130,7 +185,7 @@ int dijkstra(const edges &e, const unordered_set<int> &s, int start, mt19937& r)
                 good.push_back(i);
             }
         }
-        // TODO: check connected components
+        good = top_components(e, s, good);
         good = top_degrees(e, s, good); 
         return random_from_vector(good, r);
     }
@@ -183,7 +238,10 @@ Solution graph_solve(const Task &task) {
     }
     int iter = 0;
     while (!is_isolated(e, s)) {
-        cerr << "iter: " << ++iter << endl;
+        ++iter;
+        if (iter % 10 == 0) {
+            cerr << "iter: " << iter << endl;
+        }
         int res = get_leaves(e, s);
         if (res > 0) {
             continue;
